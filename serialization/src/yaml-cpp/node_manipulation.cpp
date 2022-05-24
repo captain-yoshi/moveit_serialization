@@ -173,3 +173,15 @@ bool YAML::getSubsetScalar(const YAML::Node& source, const YAML::Node& target, Y
 
 	return true;
 }
+
+void YAML::removeSeqOnKeyMatch(const std::string& key, Node& node, bool match) {
+	for (std::size_t i = 0; i < node.size(); ++i) {
+		if (match) {
+			if (node[i][key])
+				node.remove(i);
+		} else {
+			if (!node[i][key])
+				node.remove(i);
+		}
+	}
+}

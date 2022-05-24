@@ -213,4 +213,6 @@ bool isSubset(const Node& source, const Node& target, bool compare_scalar = true
  */
 bool getSubsetScalar(const Node& source, const Node& target, Node& scalar);
 
+void removeSeqOnKeyMatch(const std::string& key, Node& node, bool match);
+
 }  // namespace YAML

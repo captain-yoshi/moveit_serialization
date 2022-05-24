@@ -35,6 +35,7 @@ include_directories(include
 
 add_library(${PROJECT_NAME}
 	src/yaml-cpp/node_manipulation.cpp
+	src/yaml-cpp/filter.cpp
 	src/yaml-cpp/conversion/utilities.cpp
 	src/yaml-cpp/conversion/ros.cpp
 	src/yaml-cpp/conversion/std_msgs.cpp

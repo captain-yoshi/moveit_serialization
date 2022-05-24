@@ -1,14 +1,33 @@
 
-#include <moveit_serialization/yaml-cpp/node_manipulation.h>
+#include <moveit_serialization/yaml-cpp/filter.h>
+
+using namespace YAML::Filter;
 
 int main(int argc, char** argv) {
-	YAML::Node n1;
-	YAML::Node n2;
+	std::string cmd = "'.[].dataset.software[]|select(.name==\"moveit_ core\") | .version'";
+	// std::string cmd = "'.[].dataset.software[].name'";
+	// std::string cmd = "a'.'";
+	// std::string cmd = "'.data'";
 
-	YAML::merge_node(n1, n2);
+	TokenPairs list = parseCmd(cmd);
 
-	YAML::isSubset(n1, n2);
+	YAML::Node node = YAML::LoadFile("/home/captain-yoshi/.ros/tmp/dataset.yaml");
 
-	YAML::scalar_compare<bool, int> cmp;
-	cmp.equality(n1, n2);
+	State state = State(Start{ .node = node });
+
+	// auto visitor = std::bind(Transitions(), list, event, std::placeholders::_2);
+	Transitions visitor;
+
+	visitor.flows = list;
+
+	auto events = buildEvents(list);
+
+	for (const auto& event : events) {
+		auto new_state = boost::apply_visitor(visitor, state, event);
+
+		if (new_state)
+			state = std::move(*new_state);
+		else
+			break;
+	}
 }
