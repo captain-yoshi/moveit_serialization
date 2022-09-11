@@ -28,7 +28,7 @@ void write(c4::yml::NodeRef* n, moveit_msgs::MotionPlanRequest const& rhs)
     n->append_child() << yml::key("allowed_planning_time") << freal(rhs.allowed_planning_time);
     n->append_child() << yml::key("max_velocity_scaling_factor") << freal(rhs.max_velocity_scaling_factor);
     n->append_child() << yml::key("max_acceleration_scaling_factor") << freal(rhs.max_acceleration_scaling_factor);
-    n->append_child() << yml::key("cartesian_speed_end_effector_link") << rhs.cartesian_speed_end_effector_link;
+    n->append_child() << yml::key("cartesian_speed_limited_link") << rhs.cartesian_speed_limited_link;
     n->append_child() << yml::key("max_cartesian_speed") << freal(rhs.max_cartesian_speed);
 }
 
@@ -60,8 +60,8 @@ bool read(c4::yml::ConstNodeRef const& n, moveit_msgs::MotionPlanRequest* rhs)
         n["max_velocity_scaling_factor"] >> rhs->max_velocity_scaling_factor;
     if (n.has_child("max_acceleration_scaling_factor"))
         n["max_acceleration_scaling_factor"] >> rhs->max_acceleration_scaling_factor;
-    if (n.has_child("cartesian_speed_end_effector_link"))
-        n["cartesian_speed_end_effector_link"] >> rhs->cartesian_speed_end_effector_link;
+    if (n.has_child("cartesian_speed_limited_link"))
+        n["cartesian_speed_limit_link"] >> rhs->cartesian_speed_limited_link;
     if (n.has_child("max_cartesian_speed"))
         n["max_cartesian_speed"] >> rhs->max_cartesian_speed;
 
