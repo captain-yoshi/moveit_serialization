@@ -11,6 +11,71 @@
 namespace c4 {
 namespace yml {
 
+namespace {
+
+// SFINAE to extract max_cartesian_speed
+template <typename, typename = void> constexpr bool has_max_cartesian_speed = false;
+template <typename T> constexpr bool has_max_cartesian_speed<T,
+    std::void_t< decltype(std::declval<T>().max_cartesian_speed) >
+> = true;
+
+template <typename T>
+double& max_cartesian_speed_helper(T& motion_plan_request, std::true_type){
+  return motion_plan_request.max_cartesian_speed;
+};
+
+template <typename T>
+double& max_cartesian_speed_helper(T& motion_plan_request, std::false_type){
+    std::runtime_error("moveit_msgs::MotionPlanRequest does not have the 'max_cartesian_speed' parameter");
+
+    // silence warning
+    static double dummy = 0.0;
+    return dummy;
+};
+
+template <typename T>
+double& max_cartesian_speed(T&& motion_plan_request){
+  return max_cartesian_speed_helper(
+    const_cast<std::remove_const_t<std::remove_reference_t<T>>&>(motion_plan_request),
+    std::integral_constant<bool, has_max_cartesian_speed<T>>{}
+  );
+};
+
+
+// SFINAE to extract either cartesian_speed_limited_link or (previous name) cartesian_speed_end_effector_link
+template <typename, typename = void> constexpr bool has_limited_link = false;
+template <typename T> constexpr bool has_limited_link<T,
+    std::void_t< decltype(std::declval<T>().cartesian_speed_limited_link) >
+> = true;
+
+template <typename T>
+std::string& cartesian_speed_limited_link_helper(T& motion_plan_request, std::true_type){
+  return motion_plan_request.cartesian_speed_limited_link;
+};
+
+template <typename T>
+std::string& cartesian_speed_limited_link_helper(T& motion_plan_request, std::false_type){
+  return motion_plan_request.cartesian_speed_end_effector_link;
+};
+
+template <typename T>
+std::string& cartesian_speed_limited_link(T&& motion_plan_request){
+  return cartesian_speed_limited_link_helper(
+    const_cast<std::remove_const_t<std::remove_reference_t<T>>&>(motion_plan_request),
+    std::integral_constant<bool, has_limited_link<T>>{}
+  );
+};
+
+template <typename T>
+std::string cartesian_speed_limited_link_key(T& motion_plan_request){
+  if(has_limited_link<T>)
+      return "cartesian_speed_limited_link";
+  else
+      return "cartesian_speed_end_effector_link";
+};
+
+}
+
 void write(c4::yml::NodeRef* n, moveit_msgs::MotionPlanRequest const& rhs)
 {
     *n |= c4::yml::MAP;
@@ -28,8 +93,13 @@ void write(c4::yml::NodeRef* n, moveit_msgs::MotionPlanRequest const& rhs)
     n->append_child() << yml::key("allowed_planning_time") << freal(rhs.allowed_planning_time);
     n->append_child() << yml::key("max_velocity_scaling_factor") << freal(rhs.max_velocity_scaling_factor);
     n->append_child() << yml::key("max_acceleration_scaling_factor") << freal(rhs.max_acceleration_scaling_factor);
-    n->append_child() << yml::key("cartesian_speed_end_effector_link") << rhs.cartesian_speed_end_effector_link;
-    n->append_child() << yml::key("max_cartesian_speed") << freal(rhs.max_cartesian_speed);
+
+    if(has_max_cartesian_speed<moveit_msgs::MotionPlanRequest>) {
+        const std::string cartesian_speed_link_key = cartesian_speed_limited_link_key(rhs);
+
+        n->append_child() << yml::key(cartesian_speed_link_key) << cartesian_speed_limited_link(rhs);
+        n->append_child() << yml::key("max_cartesian_speed") << freal(max_cartesian_speed(rhs));
+    }
 }
 
 bool read(c4::yml::ConstNodeRef const& n, moveit_msgs::MotionPlanRequest* rhs)
@@ -60,10 +130,16 @@ bool read(c4::yml::ConstNodeRef const& n, moveit_msgs::MotionPlanRequest* rhs)
         n["max_velocity_scaling_factor"] >> rhs->max_velocity_scaling_factor;
     if (n.has_child("max_acceleration_scaling_factor"))
         n["max_acceleration_scaling_factor"] >> rhs->max_acceleration_scaling_factor;
-    if (n.has_child("cartesian_speed_end_effector_link"))
-        n["cartesian_speed_end_effector_link"] >> rhs->cartesian_speed_end_effector_link;
-    if (n.has_child("max_cartesian_speed"))
-        n["max_cartesian_speed"] >> rhs->max_cartesian_speed;
+
+    if(has_max_cartesian_speed<moveit_msgs::MotionPlanRequest>) {
+        if (n.has_child("max_cartesian_speed"))
+            n["max_cartesian_speed"] >> max_cartesian_speed(*rhs);
+        // support old message naming
+        if (n.has_child("cartesian_speed_end_effector_link"))
+            n["cartesian_speed_end_effector_link"] >> cartesian_speed_limited_link(*rhs);
+        if (n.has_child("cartesian_speed_limited_link"))
+            n["cartesian_speed_limited_link"] >> cartesian_speed_limited_link(*rhs);
+    }
 
     return true;
 }
