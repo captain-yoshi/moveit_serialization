@@ -236,7 +236,7 @@ public:
         if(C4_LIKELY(str && that))
         {
             {
-                size_t min = len < sz ? len : sz;
+                const size_t min = len < sz ? len : sz;
                 for(size_t i = 0; i < min; ++i)
                     if(str[i] != that[i])
                         return str[i] < that[i] ? -1 : 1;
@@ -258,8 +258,8 @@ public:
 
     C4_ALWAYS_INLINE C4_PURE int compare(ro_substr const that) const noexcept { return this->compare(that.str, that.len); }
 
-    C4_ALWAYS_INLINE C4_PURE bool operator== (std::nullptr_t) const noexcept { return str == nullptr || len == 0; }
-    C4_ALWAYS_INLINE C4_PURE bool operator!= (std::nullptr_t) const noexcept { return str != nullptr || len == 0; }
+    C4_ALWAYS_INLINE C4_PURE bool operator== (std::nullptr_t) const noexcept { return str == nullptr; }
+    C4_ALWAYS_INLINE C4_PURE bool operator!= (std::nullptr_t) const noexcept { return str != nullptr; }
 
     C4_ALWAYS_INLINE C4_PURE bool operator== (C const c) const noexcept { return this->compare(c) == 0; }
     C4_ALWAYS_INLINE C4_PURE bool operator!= (C const c) const noexcept { return this->compare(c) != 0; }
@@ -1951,7 +1951,11 @@ public:
         num = num != npos ? num : len - ifirst;
         num = num < that.len ? num : that.len;
         C4_ASSERT(ifirst + num >= 0 && ifirst + num <= len);
-        memcpy(str + sizeof(C) * ifirst, that.str, sizeof(C) * num);
+        // calling memcpy with null strings is undefined behavior
+        // and will wreak havoc in calling code's branches.
+        // see https://github.com/biojppm/rapidyaml/pull/264#issuecomment-1262133637
+        if(num)
+            memcpy(str + sizeof(C) * ifirst, that.str, sizeof(C) * num);
     }
 
 public:
@@ -2069,7 +2073,7 @@ public:
             {                                                           \
                 C4_ASSERT((last) >= (first));                           \
                 size_t num = static_cast<size_t>((last) - (first));     \
-                if(sz + num <= dst.len)                                 \
+                if(num > 0 && sz + num <= dst.len)                      \
                 {                                                       \
                     memcpy(dst.str + sz, first, num * sizeof(C));       \
                 }                                                       \
