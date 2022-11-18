@@ -30,7 +30,7 @@ catkin_package(
 )
 
 # add ryml as an internal library
-# https://github.com/captain-yoshi/rapidyaml/commit/2f1f495400043d5f5c9945c815dfdb8668b0f255
+# https://github.com/captain-yoshi/rapidyaml/commit/e9ec9fcf5e6f34e5f44e48f1c1038cbb7e38b285
 add_subdirectory(ext/ryml ryml)
 
 include_directories(include
