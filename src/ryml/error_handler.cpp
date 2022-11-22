@@ -34,6 +34,8 @@ struct ErrorHandler
 // https://pabloariasal.github.io/2020/01/02/static-variable-initialization/#solving-the-static-initialization-order-fiasco
 auto& registerErrorHandler()
 {
+    c4::set_error_flags(c4::get_error_flags() & ~c4::ON_ERROR_DEBUGBREAK);
+
     static auto err = ErrorHandler();
     c4::yml::set_callbacks(err.callbacks());
 
