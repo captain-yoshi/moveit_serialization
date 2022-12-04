@@ -87,6 +87,9 @@ add_library(${PROJECT_NAME}
 	src/ryml/trajectory_msgs/multidof_joint_trajectory.cpp
 	src/ryml/trajectory_msgs/multidof_joint_trajectory_point.cpp
 
+    # control_msgs
+    src/ryml/control_msgs/gripper_command.cpp
+
 	# moveit_msgs
     src/ryml/moveit_msgs/allowed_collision_entry.cpp
     src/ryml/moveit_msgs/allowed_collision_matrix.cpp

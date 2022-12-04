@@ -87,6 +87,9 @@
 #include <moveit_serialization/ryml/trajectory_msgs/multidof_joint_trajectory_point.h>
 #include <moveit_serialization/ryml/trajectory_msgs/multidof_joint_trajectory.h>
 
+// control_msgs
+#include <moveit_serialization/ryml/control_msgs/gripper_command.h>
+
 // moveit_msgs
 #include <moveit_serialization/ryml/moveit_msgs/allowed_collision_entry.h>
 #include <moveit_serialization/ryml/moveit_msgs/allowed_collision_matrix.h>
