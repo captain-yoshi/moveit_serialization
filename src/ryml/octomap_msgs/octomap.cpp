@@ -22,8 +22,11 @@ bool read(c4::yml::ConstNodeRef const& n, octomap_msgs::Octomap* rhs)
 {
     if (n.has_child("header"))
         n["header"] >> rhs->header;
-    if (n.has_child("binary"))
-        n["binary"] >> rhs->binary;
+    if (n.has_child("binary")) {
+        bool b;
+        n["binary"] >> b;
+        rhs->binary = b;
+    }
     if (n.has_child("id"))
         n["id"] >> rhs->id;
     if (n.has_child("resolution"))

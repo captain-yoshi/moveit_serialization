@@ -26,8 +26,11 @@ bool read(c4::yml::ConstNodeRef const& n, moveit_msgs::RobotState* rhs)
         n["multi_dof_joint_state"] >> rhs->multi_dof_joint_state;
     if (n.has_child("attached_collision_objects"))
         n["attached_collision_objects"] >> rhs->attached_collision_objects;
-    if (n.has_child("is_diff"))
-        n["is_diff"] >> rhs->is_diff;
+    if (n.has_child("is_diff")) {
+        bool b;
+        n["is_diff"] >> b;
+        rhs->is_diff = b;
+    }
 
     return true;
 }
