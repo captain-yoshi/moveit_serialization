@@ -15,9 +15,15 @@ void write(c4::yml::NodeRef* n, geometry_msgs::Vector3 const& rhs)
 
 bool read(c4::yml::ConstNodeRef const& n, geometry_msgs::Vector3* rhs)
 {
-    n["x"] >> rhs->x;
-    n["y"] >> rhs->y;
-    n["z"] >> rhs->z;
+    if (n.is_seq()) {
+        n[0] >> rhs->x;
+        n[1] >> rhs->y;
+        n[2] >> rhs->z;
+    } else {
+        n["x"] >> rhs->x;
+        n["y"] >> rhs->y;
+        n["z"] >> rhs->z;
+    }
 
     return true;
 }
