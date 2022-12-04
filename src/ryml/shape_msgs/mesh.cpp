@@ -20,7 +20,7 @@ bool read(c4::yml::ConstNodeRef const& n, shape_msgs::Mesh* rhs)
     if (n.has_child("triangles"))
         n["triangles"] >> rhs->triangles;
     if (n.has_child("vertices"))
-        n["vertices"] >> rhs->triangles;
+        n["vertices"] >> rhs->vertices;
 
     return true;
 }
