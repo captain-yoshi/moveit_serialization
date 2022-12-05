@@ -70,9 +70,16 @@ inline auto freal(const double& d)
 template <class T>
 inline std::size_t to_chars(substr buf, floattype<T> fmt)
 {
-    // The value of std::numeric_limits<T>::max_digits10 is the number
-    // of base-10 digits that are necessary to uniquely represent all
-    // distinct values of the type T.
+    // https://en.cppreference.com/w/cpp/types/numeric_limits/max_digits10
+
+    // The value of std::numeric_limits<T>::max_digits10 is the number of base-10 digits that are necessary to uniquely
+    // represent all distinct values of the type T, such as necessary for serialization/deserialization to text. This
+    // constant is meaningful for all floating-point types.
+    //
+    // Unlike most mathematical operations, the conversion of a floating-point value to text and back is exact as long
+    // as at least max_digits10 were used (9 for float, 17 for double): it is guaranteed to produce the same
+    // floating-point value, even though the intermediate text representation is not exact. It may take over a hundred
+    // decimal digits to represent the precise value of a float in decimal notation.
 
     return c4::ftoa(buf, fmt.val, std::numeric_limits<T>::max_digits10, FTOA_FLEX /*pick the proper format*/);
 }
