@@ -12,4 +12,4 @@ Configuration:
 - `C4_DEBUG_BREAK` is disabled at runtime in the error handler.
 
 ## Contribution
-The conversion for decoding/encoding moveit_msgs in yaml-cpp was done by Zachary Kingston and taken from the [robowflex](https://github.com/KavrakiLab/robowflex) project.
+The initial serialization using [yaml-cpp](https://github.com/jbeder/yaml-cpp) was done by Zachary Kingston from the [robowflex](https://github.com/KavrakiLab/robowflex) project.
