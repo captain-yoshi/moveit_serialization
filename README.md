@@ -10,5 +10,17 @@ Configuration:
 - Custom `Tree::has_all` method for subset node comparaison (not yet merged).
 - `C4_DEBUG_BREAK` is disabled at runtime in the error handler.
 
+## ROS Messages
+The ros messages serialization uses the same [built-in types](http://wiki.ros.org/msg) convention in this library except for the `bool/bool[]` types. The moveit_serialization encodes these types as boolean's instead of uint8_t. 
+
+Encoding a message will give an exact representation of the message (except for boolean's). Decoding a message follows the exact message structure. There are some messages that have optional decoding utilities:
+
+| ROS Msg Type                | Alternate Decoding Option
+|:----------------------------|:------------------------------------------------------------------------------------------|
+| *geometry_msgs::Point*      | [x, y, z]                                                                                 |
+| *geometry_msgs::Vector3*    | [x, y, x]                                                                                 |
+| *geometry_msgs::Quaternion* | [x, y, z, w]                                                                              |
+| *shape_msgs::Mesh*          | resource: package://my_pkg_name/mesh.stl dimensions: [x, y, z] <br> dimensions: [x, y, z] |
+
 ## Contribution
 The initial serialization using [yaml-cpp](https://github.com/jbeder/yaml-cpp) was done by Zachary Kingston from the [robowflex](https://github.com/KavrakiLab/robowflex) project.
