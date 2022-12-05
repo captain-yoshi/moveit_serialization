@@ -22,5 +22,11 @@ Encoding a message will give an exact representation of the message (except for 
 | *geometry_msgs::Quaternion* | [x, y, z, w]                                                                              |
 | *shape_msgs::Mesh*          | resource: package://my_pkg_name/mesh.stl dimensions: [x, y, z] <br> dimensions: [x, y, z] |
 
+## Caveats
+Encoding for `bool` MUST be formatted using `fmt::boolalpha`.
+
+Encoding for `floats/double` MUST be formated using `freal`. This is to ensure that the conversion of a floating-point value to text and back is [exact](include/moveit_serialization/ryml/format.h#L73-L84). The drawback is that it needs 9 and 17 digits respectively for floats and doubles, thus increasing the size of memory needed.
+
+
 ## Contribution
 The initial serialization using [yaml-cpp](https://github.com/jbeder/yaml-cpp) was done by Zachary Kingston from the [robowflex](https://github.com/KavrakiLab/robowflex) project.
