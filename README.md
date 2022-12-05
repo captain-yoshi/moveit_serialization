@@ -2,7 +2,7 @@
 
 Serializer for multiple ros messages including moveit_msgs. Supports yaml serialization through rapidyaml.
 
-## rapidyaml
+## Rapidyaml
 One of the fastest yaml parser and emiter available. <br>
 Current version: https://github.com/captain-yoshi/rapidyaml/commit/e9ec9fcf5e6f34e5f44e48f1c1038cbb7e38b285
 
