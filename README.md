@@ -10,7 +10,7 @@ One of the fastest yaml parser and emiter available.
 - `C4_DEBUG_BREAK` is disabled at runtime in the error handler.
 
 ## ROS Messages
-The ros messages serialization uses the same [built-in types](http://wiki.ros.org/msg) convention in this library except for the `bool/bool[]` types. The moveit_serialization encodes these types as boolean's instead of uint8_t. 
+The serialization uses the same ros messages [built-in types](http://wiki.ros.org/msg) convention except for the `bool/bool[]` types. These types are encoded as boolean's `true/false` instead of uint8_t `1/0`.
 
 Encoding a message will give an exact representation of the message (except for boolean's). Decoding a message follows the exact message structure. There are some messages that have optional decoding utilities:
 
