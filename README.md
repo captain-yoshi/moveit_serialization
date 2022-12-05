@@ -19,7 +19,7 @@ Encoding a message will give an exact representation of the message (except for 
 | *geometry_msgs::Point*      | [x, y, z]                                                                                 |
 | *geometry_msgs::Vector3*    | [x, y, x]                                                                                 |
 | *geometry_msgs::Quaternion* | [x, y, z, w]                                                                              |
-| *shape_msgs::Mesh*          | resource: package://my_pkg_name/mesh.stl dimensions: [x, y, z] <br> dimensions: [x, y, z] |
+| *shape_msgs::Mesh*          | resource: package://my_pkg_name/mesh.stl <br> dimensions: [x, y, z]                       |
 
 ## Caveats
 Encoding for `bool` MUST be formatted using `fmt::boolalpha`.
