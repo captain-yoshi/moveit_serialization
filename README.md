@@ -1,6 +1,6 @@
 # MoveIt Serialization
 
-Serializer for multiple ros messages including moveit_msgs. Supports yaml serialization through rapidyaml.
+Serializer for multiple ros messages including moveit_msgs. Supports yaml serialization through [rapidyaml](https://github.com/biojppm/rapidyaml).
 
 ## Rapidyaml
 One of the fastest yaml parser and emiter available.
