@@ -1966,6 +1966,11 @@ C4_ALWAYS_INLINE bool atof(csubstr str, float * C4_RESTRICT v) noexcept
     {
         fast_float::from_chars_result result;
         result = fast_float::from_chars(str.str, str.str + str.len, *v);
+
+        // str must be fully consumed
+        if (result.ptr - str.str != str.len)
+            result.ec = std::errc::invalid_argument;
+
         return result.ec == std::errc();
     }
     else if(detail::scan_rhex(rem.sub(2), v))
@@ -2005,6 +2010,11 @@ C4_ALWAYS_INLINE bool atod(csubstr str, double * C4_RESTRICT v) noexcept
     {
         fast_float::from_chars_result result;
         result = fast_float::from_chars(str.str, str.str + str.len, *v);
+
+        // str must be fully consumed
+        if (result.ptr - str.str != str.len)
+            result.ec = std::errc::invalid_argument;
+
         return result.ec == std::errc();
     }
     else if(detail::scan_rhex(rem.sub(2), v))
