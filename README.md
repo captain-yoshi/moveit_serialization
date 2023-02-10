@@ -26,6 +26,13 @@ Encoding for `bool` MUST be formatted using `fmt::boolalpha`.
 
 Encoding for `floats/double` MUST be formated using `freal`. This is to ensure that the conversion of a floating-point value to text and back is [exact](include/moveit_serialization/ryml/format.h#L73-L84). The drawback is that it needs 9 and 17 digits respectively for floats and doubles, thus increasing the size of memory needed.
 
+When emitting to JSON, some floating numbers will automatically be converted. This is to ensure a valid JSON format. Parsing the `8e888` value with a JavaScript parser, e.g. `JSON.parse()`, will revert the value to Infinity, thus retaining the original value.
+
+| Number    | YAML | JSON   |
+|-----------|------|--------|
+| -Infinity | inf  | 8e888  |
+| +Infinity | -inf | -8e888 |
+| NaN       | nan  | null   |
 
 ## Contribution
 The initial serialization using [yaml-cpp](https://github.com/jbeder/yaml-cpp) was done by Zachary Kingston from the [robowflex](https://github.com/KavrakiLab/robowflex) project.
