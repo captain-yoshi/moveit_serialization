@@ -13,7 +13,8 @@ bool c4::yml::getNodeFromKeyChainVal(const c4::yml::ConstNodeRef& source, const 
     // std::cout << "type = " << target.type_str() << std::endl;
     // std::cout << target << std::endl;
 
-    if (source.is_keyval() || source.is_val()) {
+    if (!source.is_map() &&  // except map
+        (source.is_keyval() || source.is_val())) {
         if (!target.has_child(source.val()))
             return false;
 
@@ -22,7 +23,8 @@ bool c4::yml::getNodeFromKeyChainVal(const c4::yml::ConstNodeRef& source, const 
         return true;
     } else {
         if (source.type() != target.type())
-            return false;
+            if (!(source.is_doc() || target.is_doc()))  // case where type contains DOCXXX
+                return false;
     }
 
     if (source.is_container()) {
