@@ -126,6 +126,13 @@ add_library(${PROJECT_NAME}
 add_executable(ryml-quickstart ext/ryml/samples/quickstart.cpp)
 target_link_libraries(ryml-quickstart ${catkin_LIBRARIES} ryml::ryml)
 
+## Mark cpp header files for installation
+install(DIRECTORY include/${PROJECT_NAME}/
+  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+  FILES_MATCHING PATTERN "*.h"
+  PATTERN ".svn" EXCLUDE
+)
+
 install(TARGETS
     ${PROJECT_NAME}
     ryml-quickstart
